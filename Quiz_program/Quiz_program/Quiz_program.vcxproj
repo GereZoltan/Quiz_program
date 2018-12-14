@@ -77,6 +77,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -118,7 +121,11 @@
     <None Include="..\..\README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Question.cpp" />
     <ClCompile Include="quiz.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Question.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
