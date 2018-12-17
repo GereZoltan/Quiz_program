@@ -1,0 +1,48 @@
+QWhat is green?
+ACrocodile
+AKiwi
+AApple
+AGround
+C3
+QHow many month is in a year?
+A3
+A6
+A9
+A12
+C4
+QWhat is the first letter of greek alphabet?
+AAlpha
+ABeta
+AGamma
+AOmega
+C1
+QWhat is capital of Finland?
+AEspoo
+AHelsinki
+ATurku
+ARovaniemi
+C2
+QWho invented the scissors?
+AAlfred Nobel
+AMichelangello
+ALeonardo Da Vinci
+ARoman age invention
+C3
+QWhat is Elvis Presley's middle name?
+ARobert
+AHuey
+AEdward
+AAaron
+C4
+QWho was the first american in space?
+ANeil Armstrong
+AAlan Shepard
+ABuzz Aldrin
+AWilliam H. Dana
+C2
+QWho is the giant with 100 eyes according to the Greek mythology?
+AArgus
+ATheseus
+AMedusa
+APrometheus
+C1

@@ -2,7 +2,7 @@
  * Quiz program
  * Written by Zoltan Gere
  *
- * 13.12.2018
+ * 13-17.12.2018
  */
 
 #ifdef _DEBUG
@@ -11,63 +11,20 @@
 #endif
 
 #include "Question.h"
+#include "QuestionNumberGenerator.h"
 
- // Include and using for QuestionNumberGenerator
-#include <time.h>
-#include <algorithm>
-#include <random>
-using std::shuffle;
-using std::default_random_engine;
-
-// Include and using for main()
 using std::ifstream;
 using std::ofstream;
 using std::cin;
 using std::cout;
 using std::endl;
 
-constexpr unsigned int MAXIMUM_QUESTION = 1000;
-constexpr unsigned int ASKED_QUESTION_COUNT = 5;
+constexpr unsigned int ASKED_QUESTION_COUNT = 5;					// Numberof questions asked in quiz
 
-static const char * QUESTION_FILE = "questions.txt";
+static const char * QUESTION_FILE = "questions.txt";				// The file name where questions are saved
 
-class QuestionNumberGenerator {
-private:
-	vector<size_t> numbers;
-	size_t currentNumber;
-public:
-	QuestionNumberGenerator(size_t initNumber);
-	size_t operator() ();
-};
-
-QuestionNumberGenerator::QuestionNumberGenerator(size_t initNumber) {
-	if ((initNumber > 0) && (initNumber < MAXIMUM_QUESTION)) {
-		numbers.reserve(initNumber);
-		for (size_t i = 0; i < initNumber; i++) {
-			numbers.push_back(i + 1);
-		}
-		shuffle(numbers.begin(), numbers.end(), default_random_engine(time(NULL)));
-	}
-	else {
-#ifdef _DEBUG
-		cout << "WARNING: Invalid initNumber in QuestionNumberGenerator!" << endl;
-#endif
-	}
-	currentNumber = 0;
-}
-
-size_t QuestionNumberGenerator::operator() () {
-	size_t returnValue;
-	if (currentNumber < numbers.size()) {
-		returnValue = numbers[currentNumber++];
-	}
-	else {
-		returnValue = 0;
-	}
-	return returnValue;
-}
-
-void saveQuestionsToFile (vector<Question> &outputQuestions) {
+// Function to save the question list to file
+void saveQuestionsToFile (const vector<Question> &outputQuestions) {
 	ofstream outputFile(QUESTION_FILE);
 
 	if (outputFile.fail()) {
@@ -75,16 +32,16 @@ void saveQuestionsToFile (vector<Question> &outputQuestions) {
 	}
 	else {
 		// Save questions to file
-		for (Question &q : outputQuestions) {
+		for (const Question &q : outputQuestions) {
 			outputFile << q;
 		}
-
 	}
 	if (outputFile.is_open()) {
 		outputFile.close();
 	}
 }
 
+// Function to load the question list from file
 void loadQuestionsFromFile (vector<Question> &inputQuestions) {
 	ifstream inputFile(QUESTION_FILE);
 	Question temp;
@@ -94,11 +51,12 @@ void loadQuestionsFromFile (vector<Question> &inputQuestions) {
 	}
 	else {
 		// Load questions from file
+		inputQuestions.clear();										// Clear current content, the list is replaced
 		do {
 			inputFile >> temp;
-			if (inputFile.good()) {
-				inputQuestions.push_back(temp);
-			}
+			if (inputFile.good()) {									// Only successfully read questions
+				inputQuestions.push_back(temp);						// are saved. (Last new line starts
+			}														// reading a question but fails.)
 			
 		} while (inputFile.good());
 	}
@@ -106,8 +64,6 @@ void loadQuestionsFromFile (vector<Question> &inputQuestions) {
 		inputFile.close();
 	}
 }
-
-#if 1
 
 int main() {
 	{
@@ -126,7 +82,7 @@ int main() {
 				<< "7 - Quit program" << endl
 				<< "> ";
 			cin >> choice;											// Read the choice
-			if (!cin) {
+			if (!cin) {												// If invalid character in buffer
 				cin.clear(0);										// Clear error bits ...
 				cin.ignore(256, '\n');								// ... and buffer
 			}
@@ -149,25 +105,23 @@ int main() {
 				cin >> *(questions.end() - 1);
 				break;
 			case 5:													// Take the quiz
-				if (questions.size() >= ASKED_QUESTION_COUNT)
+				if (questions.size() >= ASKED_QUESTION_COUNT)		// Check if there is sufficient number of questions
 				{
 					// Ask 5 random question, no duplicates
-					// Question number generator
+					// Question number generator (function object) provides the number of questions to ask
 					// Question has Ask method -> return value is user's answer correct / incorrect
-					QuestionNumberGenerator qng(questions.size());
-					int correctAnswers = 0;
+
+					QuestionNumberGenerator qng(questions.size());	// Provides the numbers, initialized with the nmber of questions
+					int correctAnswers = 0;							// Hold the number of correct answers
 
 					for (size_t i = 0; i < ASKED_QUESTION_COUNT; i++) {
-						// Answer alternatives displayed in random order
-						// Two incorrect + correct presented
-						// After each question program tells if answer was correct
-						correctAnswers += questions[qng()].Ask();
+						correctAnswers += questions[qng()].Ask();	// Ask the questions and gather the correct answer's count
 					}
 
 					// After the quiz print the final score
 					cout << "You answered " << correctAnswers << " of " << ASKED_QUESTION_COUNT << " correctly." << endl;
 				}
-				else {
+				else {												// Not enough questions in pool
 					cout << "You need minimum " << ASKED_QUESTION_COUNT << " questions to run the quiz." << endl;
 				}
 				break;
@@ -175,12 +129,14 @@ int main() {
 				for (Question &q : questions) {
 					cout << q;
 				}
-				cout << "Number of questions: " << questions.size() << endl;
+#ifdef _DEBUG
+				cout << "DEBUG: Number of questions: " << questions.size() << endl;
+#endif
 				break;
 			case 7:													// Quit
 				// Nothing to do
 				break;
-			default:
+			default:												// Anything else
 				cout << "No such option!" << endl;
 				break;
 			}
@@ -190,11 +146,12 @@ int main() {
 		//_CrtMemDumpStatistics(&memory);
 	}
 
+#ifdef _DEBUG
 	if (!_CrtDumpMemoryLeaks()) {
-		cout << "No memory leaks!" << endl;
+		cout << "DEBUG: No memory leaks!" << endl;
 	}
 	_CrtDumpMemoryLeaks();
+#endif
 
 	return EXIT_SUCCESS;
 }
-#endif

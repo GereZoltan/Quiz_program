@@ -122,10 +122,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Question.cpp" />
+    <ClCompile Include="QuestionNumberGenerator.cpp" />
     <ClCompile Include="quiz.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Question.h" />
+    <ClInclude Include="QuestionNumberGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
