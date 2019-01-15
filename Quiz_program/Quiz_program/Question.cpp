@@ -132,7 +132,7 @@ ostream& operator<< (ostream &out, const Question &questionOutput) {
 	cout << "  " << questionOutput.question << endl;				// Print question
 
 #ifdef _DEBUG
-	for (string &s : questionOutput.answers) {						// Print all the answers
+	for (const string &s : questionOutput.answers) {						// Print all the answers
 		cout << "\t" << s << endl;
 	}
 	cout << "DEBUG: Correct answer is: " << questionOutput.correctAnswer << endl;	// Print correct answers number
